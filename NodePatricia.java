@@ -10,11 +10,14 @@ public class NodePatricia extends NodePatriciaAbstract {
     this.edges = new EdgesArray();
     this.isLeaf = true;
   }
-
-  //public boolean lookup(String target) {
-  //  
-  //  return false;
-  //}
+  
+  public boolean isLeaf() {
+    return this.isLeaf;
+  }
+  
+  public ArrayList<EdgePatricia> getEdges() {
+    return edges.getEdges();
+  }
   
   public void insertNode(String insertee, int checked) {
     
@@ -22,13 +25,14 @@ public class NodePatricia extends NodePatriciaAbstract {
     
     if (this.isLeaf()) {
       if (remain_label.length() == 0) {
-        System.out.println("insertando algo que ya esta. no es verdad");
+        System.out.println(insertee + "Insertando algo que ya esta.");
         return;
+      } else {
+        //insertar dos nodos hojas nuevos. Uno con edge de string vacio y uno con lo que falta chequear
+        this.edges.insertByName(remain_label);
+        this.edges.insertByName("");
+        this.isLeaf = false;
       }
-      //insertar dos nodos hojas nuevos. Uno con edge de string vacio y uno con lo que falta chequear
-      this.edges.insertByName(remain_label);
-      this.edges.insertByName("");
-      this.isLeaf = false;
     } else {
       //estamos en un nodo
       if (remain_label.length() == 0) {
@@ -62,15 +66,42 @@ public class NodePatricia extends NodePatriciaAbstract {
           
           if (common_prefix_length == down_label.length()) {
             //Caso 1: Lo que baja esta incluido en la arista por incluir. Se baja y continua ahi.
-            edges.getNode(edge_index).insertNode(insertee, checked + common_prefix_length);
+            edges.getNode(edge_index).insertNode(remain_label, common_prefix_length); 
             return;
-          }
-          
-          if (true) {
-            //Caso 2
+          } else { //Caso 2? Hay que partir por la mitad.
+            System.out.println("Partir por la mitad");//DEBUG
+            NodePatricia old_kid = edges.getNode(edge_index);
+              
+            NodePatricia new_kid = new NodePatricia();
+            EdgePatricia new_kid_edge = new EdgePatricia(remain_label.substring(0, common_prefix_length));
+            new_kid_edge.setKid(new_kid);
+            new_kid.insertNode(old_kid, down_label.substring(common_prefix_length));
+            new_kid.insertNode(remain_label.substring(common_prefix_length), 0);
+            
+            edges.setEdge(new_kid_edge, edge_index);
+            return;
           }
         }
       }
     }
+  }
+
+  @Override
+  public void insertNode(NodePatricia node, String param_label) {
+    // TODO Auto-generated method stub
+    edges.insertNode(node, param_label);
+    this.isLeaf = false;
+  }
+  
+  public void showDebug() {
+    System.out.println("Nodo");
+    if (!this.isLeaf()) {
+      ArrayList<EdgePatricia> edges_array = edges.getEdges();
+      for (int i = 0; i < edges_array.size(); i++) {
+        System.out.println("Label:" + edges_array.get(i).getLabel());
+        edges_array.get(i).getKid().showDebug();
+      }
+    }
+    System.out.println("Fin Nodo");
   }
 }

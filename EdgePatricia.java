@@ -20,4 +20,8 @@ public class EdgePatricia implements EdgePatriciaInterface {
   public NodePatricia getKid() {
     return this.kidNode;
   }
+  
+  public void setKid(NodePatricia node) {
+    this.kidNode = node;
+  }
 }

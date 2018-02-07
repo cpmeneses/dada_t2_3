@@ -23,7 +23,9 @@ public class LookupPatricia {
   }
   
   public boolean lookup(String target, NodePatriciaAbstract head) {
-    if (head.isLeaf()) return false;
+    if (head.isLeaf()) {
+      return false;
+    }
     return lookupConcrete(target, head, 0);
   }
 }
