@@ -1,4 +1,4 @@
-package dadat2;
+package dada_t2_3;
 
 public class EdgePatricia implements EdgePatriciaInterface {
   NodePatricia kidNode;
